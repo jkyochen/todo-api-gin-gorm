@@ -33,11 +33,29 @@ func CreateUser(name, password, email string) (*User, error) {
 	err = db.Transaction(func(tx *gorm.DB) error {
 
 		if !tx.Where("email = ?", email).First(new(User)).RecordNotFound() {
-			return ErrUserAlreadyExist{0, name}
+			return ErrUserAlreadyExist{0, email}
 		}
 
 		return tx.Create(row).Error
 	})
 
 	return row, err
+}
+
+// GetUser get User Info
+func GetUser(email, password string) (*User, error) {
+	if len(email) == 0 || len(password) == 0 {
+		return nil, ErrUserNotExist{0, email}
+	}
+
+	user := new(User)
+	if db.Where("email = ?", email).First(user).RecordNotFound() {
+		return nil, ErrUserNotExist{0, email}
+	}
+
+	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password)); err != nil {
+		return nil, err
+	}
+
+	return user, nil
 }

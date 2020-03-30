@@ -24,3 +24,23 @@ func TestCreateUser(t *testing.T) {
 		assert.True(t, IsErrUserAlreadyExist(err))
 	})
 }
+
+func TestGetUser(t *testing.T) {
+
+	assert.NoError(t, PrepareTestDatabase())
+
+	t.Run("success get", func(t *testing.T) {
+		CreateUser("andy", "123456", "andy@mail.com")
+		user, err := GetUser("andy@mail.com", "123456")
+		assert.NoError(t, err)
+		assert.NotNil(t, user)
+		assert.Equal(t, user.Name, "andy")
+	})
+
+	t.Run("get not exist user", func(t *testing.T) {
+		user, err := GetUser("noexist@mail.com", "123456")
+		assert.Error(t, err)
+		assert.Nil(t, user)
+		assert.True(t, IsErrUserNotExist(err))
+	})
+}

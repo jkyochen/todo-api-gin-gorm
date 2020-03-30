@@ -40,3 +40,32 @@ func Register(c *gin.Context) {
 		},
 	)
 }
+
+type loginInput struct {
+	Email    string `json:"email,omitempty" binding:"required"`
+	Password string `json:"password,omitempty" binding:"required"`
+}
+
+// Login user login
+func Login(c *gin.Context) {
+	var data loginInput
+	if err := c.ShouldBindJSON(&data); err != nil {
+		errorJSON(c, http.StatusBadRequest, errBadRequest)
+		return
+	}
+
+	user, err := models.GetUser(data.Email, data.Password)
+	if err != nil {
+		errorJSON(c, http.StatusUnauthorized, errNotAuth)
+		return
+	}
+
+	c.JSON(
+		http.StatusOK,
+		map[string]interface{}{
+			"id":    user.ID,
+			"name":  user.Name,
+			"email": user.Email,
+		},
+	)
+}

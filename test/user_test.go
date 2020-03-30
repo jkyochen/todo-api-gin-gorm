@@ -64,3 +64,52 @@ func TestRegister(t *testing.T) {
 			})
 	})
 }
+
+func TestLogin(t *testing.T) {
+	assert.NoError(t, models.PrepareTestDatabase())
+
+	r := gofight.New()
+
+	t.Run("success login", func(t *testing.T) {
+		r.POST("/login").
+			SetJSON(gofight.D{
+				"email":    "check@mail.com",
+				"password": "test",
+			}).
+			Run(routers.Load(), func(r gofight.HTTPResponse, rq gofight.HTTPRequest) {
+				data := r.Body.Bytes()
+				name, _ := jsonparser.GetString(data, "name")
+				assert.Equal(t, http.StatusOK, r.Code)
+				assert.Equal(t, "check", name)
+			})
+	})
+
+	t.Run("login no input", func(t *testing.T) {
+		r.POST("/login").
+			SetJSON(gofight.D{}).
+			Run(routers.Load(), func(r gofight.HTTPResponse, rq gofight.HTTPRequest) {
+				data := r.Body.Bytes()
+				code, _ := jsonparser.GetInt(data, "code")
+				err, _ := jsonparser.GetString(data, "error")
+				assert.Equal(t, http.StatusBadRequest, r.Code)
+				assert.Equal(t, 101, int(code))
+				assert.Equal(t, "Error Code: 101, Error Message: Bad Input Request", err)
+			})
+	})
+
+	t.Run("login don't exist user", func(t *testing.T) {
+		r.POST("/login").
+			SetJSON(gofight.D{
+				"email":    "check@mail.com",
+				"password": "test123",
+			}).
+			Run(routers.Load(), func(r gofight.HTTPResponse, rq gofight.HTTPRequest) {
+				data := r.Body.Bytes()
+				code, _ := jsonparser.GetInt(data, "code")
+				err, _ := jsonparser.GetString(data, "error")
+				assert.Equal(t, http.StatusUnauthorized, r.Code)
+				assert.Equal(t, 102, int(code))
+				assert.Equal(t, "Error Code: 102, Error Message: User Can't Auth", err)
+			})
+	})
+}
