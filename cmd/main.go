@@ -13,7 +13,7 @@ import (
 
 func main() {
 
-	if err := models.NewConn(); err != nil {
+	if err := models.NewEngine(); err != nil {
 		log.Fatal("Failed to initialize ORM engine:", err)
 	}
 

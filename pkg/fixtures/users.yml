@@ -1,0 +1,11 @@
+-
+  id: 1
+  name: check
+  password: $2y$10$.8Eg89Za.toQPibD4c1RVe9RCEn/O0qzrWi1xvRw0dgm10thQL1j6
+  email: check@mail.com
+
+-
+  id: 2
+  name: lucky
+  password: $2y$10$1ZAxYkVxrHR5GCLDWwacUeWa1yAcFBxBWjyAOghbf.oHS7ZGuUAbK
+  email: lucky@mail.com

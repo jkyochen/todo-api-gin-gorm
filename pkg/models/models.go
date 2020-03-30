@@ -12,8 +12,17 @@ import (
 
 var db *gorm.DB
 
-// NewConn initializes a new gorm Engine
-func NewConn() (err error) {
+var tables []interface{}
+
+func init() {
+	tables = append(tables,
+		new(User),
+		new(Todo),
+	)
+}
+
+// NewEngine initializes a new gorm Engine
+func NewEngine() (err error) {
 
 	connStr := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=True&loc=Local", os.Getenv("DATABASE_USERNAME"), os.Getenv("DATABASE_PASSWORD"), os.Getenv("DATABASE_HOST"), os.Getenv("DATABASE_NAME"))
 
@@ -29,7 +38,7 @@ func NewConn() (err error) {
 		return err
 	}
 
-	db.AutoMigrate(new(User), new(Todo))
+	db.AutoMigrate(tables...)
 
 	return nil
 }

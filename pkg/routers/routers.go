@@ -16,6 +16,9 @@ func Load(middleware ...gin.HandlerFunc) http.Handler {
 	e.Use(gin.Logger())
 	e.Use(middleware...)
 
+	// user
+	e.POST("/register", api.Register)
+
 	// 404 not found
 	e.NoRoute(api.NotFound)
 

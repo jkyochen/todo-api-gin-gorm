@@ -1,8 +1,18 @@
+SERVICE ?= todo
+
 GO ?= go
 GOFMT ?= gofmt "-s"
 PACKAGES ?= $(shell $(GO) list ./... | grep -v integrations)
 GOFILES := $(shell find . -name "*.go" -type f)
 TAGS ?= sqlite sqlite_unlock_notify json1
+
+ifneq ($(shell uname), Darwin)
+	EXTLDFLAGS = -extldflags "-static" $(null)
+else
+	EXTLDFLAGS =
+endif
+
+all: build
 
 .PHONY: run
 run:
@@ -39,6 +49,11 @@ golangci-lint:
 		curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | sh -s -- -b $(GOPATH)/bin v1.23.6; \
 	fi
 	golangci-lint run --deadline=3m
+
+build: $(SERVICE)
+
+$(SERVICE): $(GOFILES)
+	$(GO) build -v -tags '$(TAGS)' -ldflags '$(EXTLDFLAGS)-s' -o bin/$@ ./cmd/*
 
 .PHONY: check
 check: test lint golangci-lint
