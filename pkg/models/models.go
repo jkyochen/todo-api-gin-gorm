@@ -6,9 +6,13 @@ import (
 	"time"
 
 	"github.com/jinzhu/gorm"
+	"github.com/wader/gormstore"
+
 	// Needed for the MySQL driver
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
+
+var SessionStore *gormstore.Store
 
 var db *gorm.DB
 
@@ -35,10 +39,16 @@ func NewEngine() (err error) {
 	db.DB().SetConnMaxLifetime(3 * time.Second)
 
 	if err = db.DB().Ping(); err != nil {
-		return err
+		return fmt.Errorf("Failed to ping to database: %v", err)
 	}
 
 	db.AutoMigrate(tables...)
 
+	newSession()
 	return nil
+}
+
+func newSession() {
+	SessionStore = gormstore.New(db, []byte(os.Getenv("Session_Key")))
+	go SessionStore.PeriodicCleanup(24*time.Hour, make(chan struct{}))
 }

@@ -74,7 +74,7 @@ func TestLogin(t *testing.T) {
 		r.POST("/login").
 			SetJSON(gofight.D{
 				"email":    "check@mail.com",
-				"password": "test",
+				"password": "check",
 			}).
 			Run(routers.Load(), func(r gofight.HTTPResponse, rq gofight.HTTPRequest) {
 				data := r.Body.Bytes()

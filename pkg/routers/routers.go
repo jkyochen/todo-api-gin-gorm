@@ -20,6 +20,13 @@ func Load(middleware ...gin.HandlerFunc) http.Handler {
 	e.POST("/register", api.Register)
 	e.POST("/login", api.Login)
 
+	// todo
+	e.POST("/todo", api.CreateTodo)
+	e.PUT("/todo/:id", api.UpdateTodo)
+	e.DELETE("/todo/:id", api.DeleteTodo)
+	e.GET("/todo/:id", api.GetTodo)
+	e.GET("/todo", api.GetTodos)
+
 	// 404 not found
 	e.NoRoute(api.NotFound)
 

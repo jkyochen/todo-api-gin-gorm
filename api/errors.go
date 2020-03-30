@@ -9,6 +9,7 @@ var (
 	errNotLogin       = InnError{Code: 102, Message: "User Not Login"}
 	errNotAuth        = InnError{Code: 102, Message: "User Can't Auth"}
 	errUserExist      = InnError{Code: 103, Message: "User Exist"}
+	errNotExist       = InnError{Code: 104, Message: "Todo Not Exist"}
 	errInternalServer = InnError{Code: 500, Message: "Internal Server Error"}
 )
 

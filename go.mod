@@ -10,6 +10,7 @@ require (
 	github.com/joho/godotenv v1.3.0
 	github.com/rs/zerolog v1.18.0
 	github.com/stretchr/testify v1.5.1
+	github.com/wader/gormstore v0.0.0-20200328121358-65a111a20c23
 	golang.org/x/crypto v0.0.0-20200323165209-0ec3e9974c59
 	gopkg.in/testfixtures.v2 v2.6.0
 )

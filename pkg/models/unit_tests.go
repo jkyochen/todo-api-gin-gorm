@@ -40,6 +40,7 @@ func createTestEngine(fixturesDir string) (err error) {
 
 	db.AutoMigrate(tables...)
 
+	newSession()
 	return InitFixtures(&testfixtures.SQLite{}, fixturesDir)
 }
 

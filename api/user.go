@@ -54,18 +54,30 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	user, err := models.GetUser(data.Email, data.Password)
+	row, err := models.GetUser(data.Email, data.Password)
 	if err != nil {
 		errorJSON(c, http.StatusUnauthorized, errNotAuth)
+		return
+	}
+
+	session, err := models.SessionStore.New(c.Request, "session")
+	if err != nil {
+		errorJSON(c, http.StatusInternalServerError, errInternalServer)
+		return
+	}
+	session.Values["user_id"] = row.ID
+	err = models.SessionStore.Save(c.Request, c.Writer, session)
+	if err != nil {
+		errorJSON(c, http.StatusInternalServerError, errInternalServer)
 		return
 	}
 
 	c.JSON(
 		http.StatusOK,
 		map[string]interface{}{
-			"id":    user.ID,
-			"name":  user.Name,
-			"email": user.Email,
+			"id":    row.ID,
+			"name":  row.Name,
+			"email": row.Email,
 		},
 	)
 }

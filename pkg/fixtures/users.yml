@@ -1,11 +1,11 @@
 -
   id: 1
   name: check
-  password: $2y$10$.8Eg89Za.toQPibD4c1RVe9RCEn/O0qzrWi1xvRw0dgm10thQL1j6
+  password: $2y$10$b2FZeZVqYyEOrYzr8fjy4OqSKYmvqPVA7K/1bPMtgOxhBeIYs9ECm
   email: check@mail.com
 
 -
   id: 2
   name: lucky
-  password: $2y$10$1ZAxYkVxrHR5GCLDWwacUeWa1yAcFBxBWjyAOghbf.oHS7ZGuUAbK
+  password: $2y$10$t.LsUrr835uuC62mV/7nkOT2bch3dyZSgcOcSuKwGMEszO2FkxFqq
   email: lucky@mail.com
