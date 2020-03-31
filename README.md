@@ -2,7 +2,7 @@
 
 ## Table Design
 
-![](https://www.lucidchart.com/publicSegments/view/b2625fd5-2267-4543-a6e3-b1b1fd1194eb/image.png)
+![](https://www.lucidchart.com/publicSegments/view/d69fe628-1b95-40c3-9be2-a5a004093547/image.png)
 
 ## Development
 
