@@ -10,11 +10,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type TodoInput struct {
+type todoInput struct {
 	Title   string `json:"title,omitempty" binding:"required"`
 	Content string `json:"content"`
 }
 
+// CreateTodo create todo
 func CreateTodo(c *gin.Context) {
 
 	userID := helper.GetUserDataSession(c.Request.Context())
@@ -23,7 +24,7 @@ func CreateTodo(c *gin.Context) {
 		return
 	}
 
-	var data TodoInput
+	var data todoInput
 	if err := c.ShouldBindJSON(&data); err != nil {
 		helper.ErrorJSON(c, http.StatusBadRequest, helper.ErrBadRequest)
 		return
@@ -44,6 +45,7 @@ func CreateTodo(c *gin.Context) {
 	)
 }
 
+// UpdateTodo update todo
 func UpdateTodo(c *gin.Context) {
 
 	userID := helper.GetUserDataSession(c.Request.Context())
@@ -64,7 +66,7 @@ func UpdateTodo(c *gin.Context) {
 		return
 	}
 
-	var data TodoInput
+	var data todoInput
 	if err := c.ShouldBindJSON(&data); err != nil {
 		helper.ErrorJSON(c, http.StatusBadRequest, helper.ErrBadRequest)
 		return
@@ -85,6 +87,7 @@ func UpdateTodo(c *gin.Context) {
 	)
 }
 
+// DeleteTodo delete todo
 func DeleteTodo(c *gin.Context) {
 
 	userID := helper.GetUserDataSession(c.Request.Context())
@@ -118,6 +121,7 @@ func DeleteTodo(c *gin.Context) {
 	)
 }
 
+// GetTodo get single todo
 func GetTodo(c *gin.Context) {
 
 	userID := helper.GetUserDataSession(c.Request.Context())
@@ -150,6 +154,7 @@ func GetTodo(c *gin.Context) {
 	)
 }
 
+// GetTodos get all todo about assign user
 func GetTodos(c *gin.Context) {
 
 	userID := helper.GetUserDataSession(c.Request.Context())

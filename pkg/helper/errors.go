@@ -8,11 +8,17 @@ import (
 )
 
 var (
-	ErrBadRequest     = InnError{Code: 101, Message: "Bad Input Request"}
-	ErrNotLogin       = InnError{Code: 102, Message: "User Not Login"}
-	ErrNotAuth        = InnError{Code: 103, Message: "User Can't Auth"}
-	ErrUserExist      = InnError{Code: 104, Message: "User Exist"}
-	ErrNotExist       = InnError{Code: 105, Message: "Todo Not Exist"}
+	// ErrBadRequest Bad Input Request
+	ErrBadRequest = InnError{Code: 101, Message: "Bad Input Request"}
+	// ErrNotLogin User Not Login
+	ErrNotLogin = InnError{Code: 102, Message: "User Not Login"}
+	// ErrNotAuth User Can't Auth
+	ErrNotAuth = InnError{Code: 103, Message: "User Can't Auth"}
+	// ErrUserExist User Exist
+	ErrUserExist = InnError{Code: 104, Message: "User Exist"}
+	// ErrNotExist Todo Not Exist
+	ErrNotExist = InnError{Code: 105, Message: "Todo Not Exist"}
+	// ErrInternalServer Internal Server Error
 	ErrInternalServer = InnError{Code: 500, Message: "Internal Server Error"}
 )
 
@@ -32,6 +38,7 @@ func IsInnError(err error) bool {
 	return ok
 }
 
+// ErrorJSON output json error
 func ErrorJSON(c *gin.Context, code int, err InnError) {
 	log.Error().Err(err).Msg("json error")
 

@@ -12,6 +12,7 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
 
+// SessionStore control session save and get
 var SessionStore *gormstore.Store
 
 var db *gorm.DB
