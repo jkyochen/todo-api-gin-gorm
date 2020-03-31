@@ -59,8 +59,8 @@ func TestRegister(t *testing.T) {
 				code, _ := jsonparser.GetInt(data, "code")
 				err, _ := jsonparser.GetString(data, "error")
 				assert.Equal(t, http.StatusConflict, r.Code)
-				assert.Equal(t, 103, int(code))
-				assert.Equal(t, "Error Code: 103, Error Message: User Exist", err)
+				assert.Equal(t, 104, int(code))
+				assert.Equal(t, "Error Code: 104, Error Message: User Exist", err)
 			})
 	})
 }
@@ -108,8 +108,8 @@ func TestLogin(t *testing.T) {
 				code, _ := jsonparser.GetInt(data, "code")
 				err, _ := jsonparser.GetString(data, "error")
 				assert.Equal(t, http.StatusUnauthorized, r.Code)
-				assert.Equal(t, 102, int(code))
-				assert.Equal(t, "Error Code: 102, Error Message: User Can't Auth", err)
+				assert.Equal(t, 103, int(code))
+				assert.Equal(t, "Error Code: 103, Error Message: User Can't Auth", err)
 			})
 	})
 }

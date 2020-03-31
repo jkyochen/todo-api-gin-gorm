@@ -3,6 +3,7 @@ package api
 import (
 	"net/http"
 
+	"todo-api-gin-gorm/pkg/helper"
 	"todo-api-gin-gorm/pkg/models"
 
 	"github.com/gin-gonic/gin"
@@ -18,17 +19,17 @@ type registerInput struct {
 func Register(c *gin.Context) {
 	var data registerInput
 	if err := c.ShouldBindJSON(&data); err != nil {
-		errorJSON(c, http.StatusBadRequest, errBadRequest)
+		helper.ErrorJSON(c, http.StatusBadRequest, helper.ErrBadRequest)
 		return
 	}
 
 	row, err := models.CreateUser(data.Name, data.Password, data.Email)
 	if models.IsErrUserAlreadyExist(err) {
-		errorJSON(c, http.StatusConflict, errUserExist)
+		helper.ErrorJSON(c, http.StatusConflict, helper.ErrUserExist)
 		return
 	}
 	if err != nil {
-		errorJSON(c, http.StatusInternalServerError, errInternalServer)
+		helper.ErrorJSON(c, http.StatusInternalServerError, helper.ErrInternalServer)
 		return
 	}
 
@@ -50,25 +51,25 @@ type loginInput struct {
 func Login(c *gin.Context) {
 	var data loginInput
 	if err := c.ShouldBindJSON(&data); err != nil {
-		errorJSON(c, http.StatusBadRequest, errBadRequest)
+		helper.ErrorJSON(c, http.StatusBadRequest, helper.ErrBadRequest)
 		return
 	}
 
 	row, err := models.GetUser(data.Email, data.Password)
 	if err != nil {
-		errorJSON(c, http.StatusUnauthorized, errNotAuth)
+		helper.ErrorJSON(c, http.StatusUnauthorized, helper.ErrNotAuth)
 		return
 	}
 
 	session, err := models.SessionStore.New(c.Request, "session")
 	if err != nil {
-		errorJSON(c, http.StatusInternalServerError, errInternalServer)
+		helper.ErrorJSON(c, http.StatusInternalServerError, helper.ErrInternalServer)
 		return
 	}
 	session.Values["user_id"] = row.ID
 	err = models.SessionStore.Save(c.Request, c.Writer, session)
 	if err != nil {
-		errorJSON(c, http.StatusInternalServerError, errInternalServer)
+		helper.ErrorJSON(c, http.StatusInternalServerError, helper.ErrInternalServer)
 		return
 	}
 

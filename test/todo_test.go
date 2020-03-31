@@ -250,8 +250,8 @@ func TestDeleteTodo(t *testing.T) {
 				code, _ := jsonparser.GetInt(data, "code")
 				err, _ := jsonparser.GetString(data, "error")
 				assert.Equal(t, http.StatusForbidden, r.Code)
-				assert.Equal(t, 104, int(code))
-				assert.Equal(t, "Error Code: 104, Error Message: Todo Not Exist", err)
+				assert.Equal(t, 105, int(code))
+				assert.Equal(t, "Error Code: 105, Error Message: Todo Not Exist", err)
 			})
 	})
 

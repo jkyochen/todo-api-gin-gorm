@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"todo-api-gin-gorm/api"
+	"todo-api-gin-gorm/pkg/middleware/auth"
 	"todo-api-gin-gorm/pkg/middleware/header"
 
 	"github.com/gin-gonic/gin"
@@ -25,11 +26,15 @@ func Load(middleware ...gin.HandlerFunc) http.Handler {
 	e.POST("/login", api.Login)
 
 	// todo
-	e.POST("/todo", api.CreateTodo)
-	e.PUT("/todo/:id", api.UpdateTodo)
-	e.DELETE("/todo/:id", api.DeleteTodo)
-	e.GET("/todo/:id", api.GetTodo)
-	e.GET("/todo", api.GetTodos)
+	v := e.Group("")
+	v.Use(auth.Check())
+	{
+		v.POST("/todo", api.CreateTodo)
+		v.PUT("/todo/:id", api.UpdateTodo)
+		v.DELETE("/todo/:id", api.DeleteTodo)
+		v.GET("/todo/:id", api.GetTodo)
+		v.GET("/todo", api.GetTodos)
+	}
 
 	// 404 not found
 	e.NoRoute(api.NotFound)

@@ -4,25 +4,11 @@ import (
 	"net/http"
 	"strconv"
 
+	"todo-api-gin-gorm/pkg/helper"
 	"todo-api-gin-gorm/pkg/models"
 
 	"github.com/gin-gonic/gin"
 )
-
-func Auth(c *gin.Context) uint {
-
-	session, err := models.SessionStore.Get(c.Request, "session")
-	if err != nil {
-		return 0
-	}
-
-	userID, ok := session.Values["user_id"].(uint)
-	if !ok {
-		return 0
-	}
-
-	return userID
-}
 
 type TodoInput struct {
 	Title   string `json:"title,omitempty" binding:"required"`
@@ -31,21 +17,21 @@ type TodoInput struct {
 
 func CreateTodo(c *gin.Context) {
 
-	userID := Auth(c)
+	userID := helper.GetUserDataSession(c.Request.Context())
 	if userID == 0 {
-		errorJSON(c, http.StatusUnauthorized, errNotLogin)
+		helper.ErrorJSON(c, http.StatusUnauthorized, helper.ErrNotLogin)
 		return
 	}
 
 	var data TodoInput
 	if err := c.ShouldBindJSON(&data); err != nil {
-		errorJSON(c, http.StatusBadRequest, errBadRequest)
+		helper.ErrorJSON(c, http.StatusBadRequest, helper.ErrBadRequest)
 		return
 	}
 
 	row, err := models.CreateTodo(data.Title, data.Content, userID)
 	if err != nil {
-		errorJSON(c, http.StatusInternalServerError, errInternalServer)
+		helper.ErrorJSON(c, http.StatusInternalServerError, helper.ErrInternalServer)
 		return
 	}
 
@@ -60,33 +46,33 @@ func CreateTodo(c *gin.Context) {
 
 func UpdateTodo(c *gin.Context) {
 
-	userID := Auth(c)
+	userID := helper.GetUserDataSession(c.Request.Context())
 	if userID == 0 {
-		errorJSON(c, http.StatusUnauthorized, errNotLogin)
+		helper.ErrorJSON(c, http.StatusUnauthorized, helper.ErrNotLogin)
 		return
 	}
 
 	id := c.Param("id")
 	if id == "" {
-		errorJSON(c, http.StatusBadRequest, errBadRequest)
+		helper.ErrorJSON(c, http.StatusBadRequest, helper.ErrBadRequest)
 		return
 	}
 
 	todoID, err := strconv.Atoi(id)
 	if err != nil {
-		errorJSON(c, http.StatusBadRequest, errBadRequest)
+		helper.ErrorJSON(c, http.StatusBadRequest, helper.ErrBadRequest)
 		return
 	}
 
 	var data TodoInput
 	if err := c.ShouldBindJSON(&data); err != nil {
-		errorJSON(c, http.StatusBadRequest, errBadRequest)
+		helper.ErrorJSON(c, http.StatusBadRequest, helper.ErrBadRequest)
 		return
 	}
 
 	row, err := models.UpdateTodo(uint(todoID), data.Title, data.Content)
 	if err != nil {
-		errorJSON(c, http.StatusInternalServerError, errInternalServer)
+		helper.ErrorJSON(c, http.StatusInternalServerError, helper.ErrInternalServer)
 		return
 	}
 
@@ -101,26 +87,26 @@ func UpdateTodo(c *gin.Context) {
 
 func DeleteTodo(c *gin.Context) {
 
-	userID := Auth(c)
+	userID := helper.GetUserDataSession(c.Request.Context())
 	if userID == 0 {
-		errorJSON(c, http.StatusUnauthorized, errNotLogin)
+		helper.ErrorJSON(c, http.StatusUnauthorized, helper.ErrNotLogin)
 		return
 	}
 
 	id := c.Param("id")
 	if id == "" {
-		errorJSON(c, http.StatusBadRequest, errBadRequest)
+		helper.ErrorJSON(c, http.StatusBadRequest, helper.ErrBadRequest)
 		return
 	}
 
 	todoID, err := strconv.Atoi(id)
 	if err != nil {
-		errorJSON(c, http.StatusBadRequest, errBadRequest)
+		helper.ErrorJSON(c, http.StatusBadRequest, helper.ErrBadRequest)
 		return
 	}
 
 	if models.DeleteTodo(uint(todoID)); err != nil {
-		errorJSON(c, http.StatusInternalServerError, errInternalServer)
+		helper.ErrorJSON(c, http.StatusInternalServerError, helper.ErrInternalServer)
 		return
 	}
 
@@ -134,27 +120,27 @@ func DeleteTodo(c *gin.Context) {
 
 func GetTodo(c *gin.Context) {
 
-	userID := Auth(c)
+	userID := helper.GetUserDataSession(c.Request.Context())
 	if userID == 0 {
-		errorJSON(c, http.StatusUnauthorized, errNotLogin)
+		helper.ErrorJSON(c, http.StatusUnauthorized, helper.ErrNotLogin)
 		return
 	}
 
 	id := c.Param("id")
 	if id == "" {
-		errorJSON(c, http.StatusBadRequest, errBadRequest)
+		helper.ErrorJSON(c, http.StatusBadRequest, helper.ErrBadRequest)
 		return
 	}
 
 	todoID, err := strconv.Atoi(id)
 	if err != nil {
-		errorJSON(c, http.StatusBadRequest, errBadRequest)
+		helper.ErrorJSON(c, http.StatusBadRequest, helper.ErrBadRequest)
 		return
 	}
 
 	todo, err := models.GetTodo(uint(todoID))
 	if err != nil {
-		errorJSON(c, http.StatusForbidden, errNotExist)
+		helper.ErrorJSON(c, http.StatusForbidden, helper.ErrNotExist)
 		return
 	}
 
@@ -166,15 +152,15 @@ func GetTodo(c *gin.Context) {
 
 func GetTodos(c *gin.Context) {
 
-	userID := Auth(c)
+	userID := helper.GetUserDataSession(c.Request.Context())
 	if userID == 0 {
-		errorJSON(c, http.StatusUnauthorized, errNotLogin)
+		helper.ErrorJSON(c, http.StatusUnauthorized, helper.ErrNotLogin)
 		return
 	}
 
 	todos, err := models.GetTodos(userID)
 	if err != nil {
-		errorJSON(c, http.StatusInternalServerError, errInternalServer)
+		helper.ErrorJSON(c, http.StatusInternalServerError, helper.ErrInternalServer)
 		return
 	}
 
