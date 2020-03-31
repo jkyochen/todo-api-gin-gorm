@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"todo-api-gin-gorm/api"
+	"todo-api-gin-gorm/pkg/middleware/header"
 
 	"github.com/gin-gonic/gin"
 )
@@ -14,6 +15,9 @@ func Load(middleware ...gin.HandlerFunc) http.Handler {
 	e := gin.New()
 	e.Use(gin.Recovery())
 	e.Use(gin.Logger())
+
+	e.Use(header.Options)
+	e.Use(header.Secure)
 	e.Use(middleware...)
 
 	// user
