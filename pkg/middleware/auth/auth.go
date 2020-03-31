@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 
+	"todo-api-gin-gorm/pkg/config"
 	"todo-api-gin-gorm/pkg/helper"
 	"todo-api-gin-gorm/pkg/models"
 
@@ -27,7 +28,7 @@ func Check() gin.HandlerFunc {
 			return
 		}
 
-		ctx := context.WithValue(c.Request.Context(), "user_id", userID)
+		ctx := context.WithValue(c.Request.Context(), config.ContextKeyUser, userID)
 		c.Request = c.Request.WithContext(ctx)
 	}
 }

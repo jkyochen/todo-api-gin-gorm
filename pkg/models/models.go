@@ -2,8 +2,9 @@ package models
 
 import (
 	"fmt"
-	"os"
 	"time"
+
+	"todo-api-gin-gorm/pkg/config"
 
 	"github.com/jinzhu/gorm"
 	"github.com/wader/gormstore"
@@ -29,9 +30,9 @@ func init() {
 // NewEngine initializes a new gorm Engine
 func NewEngine() (err error) {
 
-	connStr := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=True&loc=Local", os.Getenv("DATABASE_USERNAME"), os.Getenv("DATABASE_PASSWORD"), os.Getenv("DATABASE_HOST"), os.Getenv("DATABASE_NAME"))
+	connStr := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=True&loc=Local", config.Database.Username, config.Database.Password, config.Database.Host, config.Database.Name)
 
-	if db, err = gorm.Open(os.Getenv("DATABASE_DRIVER"), connStr); err != nil {
+	if db, err = gorm.Open(config.Database.Driver, connStr); err != nil {
 		return fmt.Errorf("Failed to connect to database: %v", err)
 	}
 
@@ -45,11 +46,18 @@ func NewEngine() (err error) {
 
 	db.AutoMigrate(tables...)
 
+	startDebug()
 	newSession()
 	return nil
 }
 
+func startDebug() {
+	if config.Server.Debug {
+		db.Debug()
+	}
+}
+
 func newSession() {
-	SessionStore = gormstore.New(db, []byte(os.Getenv("Session_Key")))
+	SessionStore = gormstore.New(db, []byte(config.Session.Key))
 	go SessionStore.PeriodicCleanup(24*time.Hour, make(chan struct{}))
 }
